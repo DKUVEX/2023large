@@ -1,5 +1,5 @@
 #include "main.h"
-using namespace pros;
+
 /**
  * A callback function for LLEMU's center button.
  *
@@ -75,22 +75,30 @@ void autonomous() {}
  */
 void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	Motor left_mtr_A(20);
-    Motor right_mtr_A(11);
-    Motor left_mtr_B(9);
-    Motor right_mtr_B(8);
+	pros::Motor left_mtr_A(20);
+    pros::Motor right_mtr_A(11);
+    pros::Motor left_mtr_B(9);
+    pros::Motor right_mtr_B(8);
 
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
-		int forward = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
-		int turn = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
+		int forward = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+		int lr = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+		int turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-		left_mtr_A = forward+turn;
-        left_mtr_B= forward+turn;
-        right_mtr_A = -forward+turn;
-		right_mtr_B = -forward+turn;
+		left_mtr_A  =  forward + turn + lr;
+        left_mtr_B  =  forward + turn - lr;
+        right_mtr_A = -forward + turn + lr;
+		right_mtr_B = -forward + turn - lr;
+		// left_mtr_A = lr;
+		// left_mtr_B = -lr;
+		// right_mtr_A = lr;
+		// right_mtr_B = -lr;
+
+
+
 
 		pros::delay(20);
 	}
