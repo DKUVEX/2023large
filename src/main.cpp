@@ -1,5 +1,5 @@
 #include "main.h"
-using namespace pros;
+#include "dku/chassis_task.hpp"
 /**
  * A callback function for LLEMU's center button.
  *
@@ -74,24 +74,6 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	Motor left_mtr_A(20);
-    Motor right_mtr_A(11);
-    Motor left_mtr_B(9);
-    Motor right_mtr_B(8);
-
-	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
-		int forward = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
-		int turn = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
-
-		left_mtr_A = forward+turn;
-        left_mtr_B= forward+turn;
-        right_mtr_A = -forward+turn;
-		right_mtr_B = -forward+turn;
-
-		pros::delay(20);
-	}
+	pros::Task my_task(chassis_task_fn);
+	pros::delay(20);
 }

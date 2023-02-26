@@ -1,12 +1,12 @@
 /**
   ****************************(C) COPYRIGHT 2023 Blue Bear****************************
-  * @file       chassis.cpp
+  * @file       chassis_task.cpp
   * @brief      chassis control task,
   *             底盘控制任务
   * @note       
   * @history
   *  Version    Date            Author          Modification
-  *  V1.0.0     Feb-19-2023     Yuchen & Yuchen          1. start
+  *  V1.0.0     Feb-26-2023     Yuchen & Yuchen          1. start
   *
   @verbatim
   ==============================================================================
@@ -79,8 +79,8 @@ void chassis_task_fn(void* param) {
     while (true) {
         // Do opcontrol things
         int forward =   chassis_move.chassis_RC->get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-		int lr =        chassis_move.chassis_RC->get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
-	 	int turn =      chassis_move.chassis_RC->get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+		    int lr =        chassis_move.chassis_RC->get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+	 	    int turn =      chassis_move.chassis_RC->get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
 
         chassis_move.motor_chassis[0].motor_status->move( forward + turn + lr);
