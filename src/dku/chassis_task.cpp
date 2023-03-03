@@ -16,6 +16,7 @@
   */
 #include "dku/chassis_task.hpp"
 #include "dku/remote_control.hpp"
+#include "main.h"
 
 
 //底盘运动数据 chassis movement data

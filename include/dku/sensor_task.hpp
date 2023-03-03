@@ -28,20 +28,20 @@
 //传感器任务控制间隔 2ms
 #define SENSOR_CONTROL_TIME_MS 2
 
-#define SENSOR_GPS_FRONT_PORT 20
-#define SENSOR_GPS_BACK_PORT 1
+#define SENSOR_GPS_LEFT_PORT 6
+#define SENSOR_GPS_RIGHT_PORT 2
 
-#define SENSOR_GPS_FRONT_OFFSET_X 0.01
-#define SENSOR_GPS_FRONT_OFFSET_Y 0.01
-#define SENSOR_GPS_FRONT_INITIAL_X 0.01
-#define SENSOR_GPS_FRONT_INITIAL_Y 0.01
-#define SENSOR_GPS_FRONT_INITIAL_HEADING 0
+#define SENSOR_GPS_LEFT_OFFSET_X 0.01
+#define SENSOR_GPS_LEFT_OFFSET_Y 0.01
+#define SENSOR_GPS_LEFT_INITIAL_X 0.01
+#define SENSOR_GPS_LEFT_INITIAL_Y 0.01
+#define SENSOR_GPS_LEFT_INITIAL_HEADING 0
 
-#define SENSOR_GPS_BACK_OFFSET_X 0.01
-#define SENSOR_GPS_BACK_OFFSET_Y 0.01
-#define SENSOR_GPS_BACK_INITIAL_X 0.01
-#define SENSOR_GPS_BACK_INITIAL_Y 0.01
-#define SENSOR_GPS_BACK_INITIAL_HEADING 0
+#define SENSOR_GPS_RIGHT_OFFSET_X 0.01
+#define SENSOR_GPS_RIGHT_OFFSET_Y 0.01
+#define SENSOR_GPS_RIGHT_INITIAL_X 0.01
+#define SENSOR_GPS_RIGHT_INITIAL_Y 0.01
+#define SENSOR_GPS_RIGHT_INITIAL_HEADING 0
 
 typedef struct {
     pros::GPS *gps_pointer;
@@ -51,8 +51,8 @@ typedef struct {
 }gps_all_t;
 typedef struct {
     
-    gps_all_t gps_front_data;
-    gps_all_t gps_back_data;
+    gps_all_t gps_left_data;
+    gps_all_t gps_right_data;
     pros::Optical *optical_data;
 }sensor_data_t;
 /**

@@ -21,6 +21,7 @@
 #include <cstdint>
 #include <iostream>
 #include "api.h"
+#include "main.h"
 
 //in the beginning of task ,wait a time
 //任务开始空闲一段时间
