@@ -137,10 +137,9 @@ void move_to(double target_x, double target_y, auto_control_t* move);
  * @param[in,out]   turn: find current position,give chassis voltage
  * @retval          null
  */
-void move_time(double direction, double time, auto_control_t* move);
+void move_time(double direction, double time, auto_control_t* move, std::int32_t analog_left_y = CHASSIS_MOVE_SPEED);
 
 
-void move_back_relative(double target_distance, auto_control_t* move);
 
 /**
  * @brief           kick out 3 plates
@@ -158,14 +157,13 @@ void kick_out(auto_control_t* kick);
 void rotate_roller(std::int32_t time , auto_control_t* rotate);
 
 /**
- 
- 
- * @brief           auto control init
- * @param[in,out]   init:
+ * @brief           let the robot move horizontally
+ * @param[in]       target_distance: '-' means left, '+' means right
+ * @param[in,out]   move: control object
+ * @param[in]       analog_left_y: speed
  * @retval          null
  */
-
-void move_horizontal_relative(double target_distance, auto_control_t* move);
+void move_horizontal_relative(double target_distance, auto_control_t* move, std::int32_t analog_left_y = CHASSIS_MOVE_SPEED);
 
 /**
  * @brief           move a relative distance, unit is meter

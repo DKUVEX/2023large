@@ -228,9 +228,8 @@ void move_to(double target_x, double target_y, auto_control_t* move)
  * @param[in,out]   turn: find current position,give chassis voltage
  * @retval          null
  */
-void move_time(double direction, double time, auto_control_t* move)
+void move_time(double direction, double time, auto_control_t* move, std::int32_t analog_left_y)
 {
-    std::int32_t analog_left_y = CHASSIS_MOVE_SPEED;
     pros::Mutex turn_mutex;
     turn_mutex.take();
     {
@@ -284,11 +283,11 @@ void move_vertical_relative_speed(double target_distance, auto_control_t* move, 
             move->chassis_voltage[3] = analog_left_y*direction_flag;
         }
         turn_mutex.give();
-        a = -move->sensor_data->gps_front_data.gps_acc.y;
+        a = -move->sensor_data->gps_front_data.gps_acc.x*10;
         v0 = vt;
-        vt = v0 + a*(AUTO_TASK_TIME_MS/100.0);
-        x += (v0*(AUTO_TASK_TIME_MS/100.0) + 0.5*a*(AUTO_TASK_TIME_MS/100.0)*(AUTO_TASK_TIME_MS/100.0))*direction_flag;
-        printf("distance %lf", x);
+        vt = v0 + a*(AUTO_TASK_TIME_MS/1000.0);
+        x += (v0*(AUTO_TASK_TIME_MS/1000.0) + 0.5*a*(AUTO_TASK_TIME_MS/1000.0)*(AUTO_TASK_TIME_MS/1000.0));
+        printf("a: %lf, distance %lf\n", a, x);
         pros::lcd::print(1, "distance: %lf", x);
         pros::lcd::print(2, "acc: %lf", move->sensor_data->gps_front_data.gps_acc.y);
         pros::Task::delay_until(&now_2, AUTO_TASK_TIME_MS);
@@ -303,7 +302,14 @@ void move_vertical_relative_speed(double target_distance, auto_control_t* move, 
     turn_mutex.give();
 }
 
-void move_horizontal_relative(double target_distance, auto_control_t* move)
+/**
+ * @brief           let the robot move horizontally
+ * @param[in]       target_distance: '-' means left, '+' means right
+ * @param[in,out]   move: control object
+ * @param[in]       analog_left_y: speed
+ * @retval          null
+ */
+void move_horizontal_relative(double target_distance, auto_control_t* move, std::int32_t analog_left_y)
 {
     std::int32_t direction_flag = -1;
     if (target_distance > 0 ) {
@@ -314,9 +320,9 @@ void move_horizontal_relative(double target_distance, auto_control_t* move)
     double x = 0;
     double a = 0;
     pros::Mutex turn_mutex;
-    std::int32_t analog_left_y = CHASSIS_MOVE_SPEED;
+    
     std::uint32_t now_2 = pros::millis();
-    while (abs(x) < target_distance*direction_flag ) {
+    while (x < target_distance ) {
         turn_mutex.take();
         {
             move->chassis_voltage[0] = analog_left_y*direction_flag ;
@@ -325,11 +331,11 @@ void move_horizontal_relative(double target_distance, auto_control_t* move)
             move->chassis_voltage[3] = analog_left_y*direction_flag ;
         }
         turn_mutex.give();
-        a = -move->sensor_data->gps_front_data.gps_acc.x;
+        a = -move->sensor_data->gps_front_data.gps_acc.y;
         v0 = vt;
         vt = v0 + a*(AUTO_TASK_TIME_MS/100.0);
-        x += (v0*(AUTO_TASK_TIME_MS/100.0) + 0.5*a*(AUTO_TASK_TIME_MS/100.0)*(AUTO_TASK_TIME_MS/100.0))*direction_flag ;
-        printf("distance %lf", x);
+        x += (v0*(AUTO_TASK_TIME_MS/100.0) + 0.5*a*(AUTO_TASK_TIME_MS/100.0)*(AUTO_TASK_TIME_MS/100.0)) ;
+        printf("a: %lf, distance %lf\n", a, x);
         pros::lcd::print(1, "distance: %lf", x);
         pros::lcd::print(2, "acc: %lf", move->sensor_data->gps_front_data.gps_acc.x);
         pros::Task::delay_until(&now_2, AUTO_TASK_TIME_MS);

@@ -84,13 +84,13 @@ void autonomous() {
     std::cout << "auto task runs" << std::endl;
     pros::Task::delay(1000);
     auto_init(&auto_control);
-    
+    pros::delay(2000);
     // auto_control.functional_status->intake_motor = E_FUNCTIONAL_MOTOR_STATUS_OFF;
 
     // turn_relative(-90, &auto_control);
-    // move_vertical_relative_speed(-0.5, &auto_control);
-
-    move_horizontal_relative(0.5, &auto_control);
+    // move_vertical_relative_speed(0.5, &auto_control);
+    move_horizontal_relative(3, &auto_control, 40);
+    move_time(-1, 500 ,&auto_control, 30);
     
     // turn_relative(90, &auto_control);
 
