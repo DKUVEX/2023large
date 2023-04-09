@@ -25,12 +25,13 @@
 //in the beginning of task ,wait a time
 //任务开始空闲一段时间
 #define SENSOR_TASK_INIT_TIME 300
-//sensor task control time  2ms
-//传感器任务控制间隔 2ms
-#define SENSOR_CONTROL_TIME_MS  2
+//sensor task control time  5ms
+//传感器任务控制间隔 5ms
+#define SENSOR_CONTROL_TIME_MS  5
 
 #define SENSOR_GPS_FRONT_PORT   2
 #define SENSOR_GPS_BACK_PORT    6
+#define SENSOR_IMU_PORT         14
 
 #define SENSOR_GPS_FRONT_OFFSET_X 0.01
 #define SENSOR_GPS_FRONT_OFFSET_Y 0.01
@@ -51,9 +52,14 @@ typedef struct {
     pros::c::gps_accel_s_t gps_acc;
 }gps_all_t;
 typedef struct {
-    
+    pros::IMU *imu_pointer;
+    pros::c::imu_accel_s_t imu_acc;
+    pros::c::imu_gyro_s_t imu_gyro;
+}imu_all_t;
+typedef struct {
     gps_all_t gps_front_data;
     gps_all_t gps_back_data;
+    imu_all_t imu_data;
     pros::Optical *optical_data;
 }sensor_data_t;
 /**

@@ -26,6 +26,14 @@ pros::GPS gps_front(SENSOR_GPS_FRONT_PORT, SENSOR_GPS_FRONT_INITIAL_X, SENSOR_GP
                     SENSOR_GPS_FRONT_INITIAL_HEADING, SENSOR_GPS_FRONT_OFFSET_X, SENSOR_GPS_FRONT_OFFSET_Y);
 pros::GPS gps_back(SENSOR_GPS_BACK_PORT, SENSOR_GPS_BACK_INITIAL_X, SENSOR_GPS_BACK_INITIAL_Y, 
                     SENSOR_GPS_BACK_INITIAL_HEADING, SENSOR_GPS_BACK_OFFSET_X, SENSOR_GPS_BACK_OFFSET_Y);
+pros::IMU imu(SENSOR_IMU_PORT);
+
+/**
+ * @brief           update imu data
+ * @param[in,out]   imu_update: imu object
+ * @retval          none
+ */
+void imu_data_update(imu_all_t *imu_update);
 
 /**
   * @brief          update gps data, include position, gyroscope and accelerate
@@ -52,7 +60,16 @@ static void gps_data_update(gps_all_t *gps_update);
 //TODO: not finish yet
 static void sensor_init(sensor_data_t *sensor_fetch_init);
 
-
+/**
+ * @brief           update imu data
+ * @param[in,out]   imu_update: imu object
+ * @retval          none
+ */
+void imu_data_update(imu_all_t *imu_update)
+{
+    imu_update->imu_gyro = imu_update->imu_pointer->get_gyro_rate();
+    imu_update->imu_acc = imu_update->imu_pointer->get_accel();
+}
 /**
   * @brief          update gps data, include position, gyroscope and accelerate
   * @param[out]     gps_all_t: "gps_update" valiable point
@@ -85,8 +102,11 @@ static void sensor_init(sensor_data_t *sensor_fetch_init)
 {
     sensor_fetch_init->gps_front_data.gps_pointer = &gps_front;
     sensor_fetch_init->gps_back_data.gps_pointer = &gps_back;
+    sensor_fetch_init->imu_data.imu_pointer = &imu;
+    sensor_fetch_init->imu_data.imu_pointer->reset(true);
     gps_data_update(&sensor_fetch_init->gps_front_data);
     gps_data_update(&sensor_fetch_init->gps_back_data);
+    imu_data_update(&sensor_fetch_init->imu_data);
 }
 /**
   * @brief          get sensor data point
@@ -121,6 +141,7 @@ void sensor_task_fn(void* param)
     while (true) {
         gps_data_update(&sensor_fetch.gps_front_data);
         gps_data_update(&sensor_fetch.gps_back_data);
+        imu_data_update(&sensor_fetch.imu_data);
         /*test code*/
         //TODO: add a polt on pc to see the trend of gyro and acc(transfer com data to some apps?)
         // pros::lcd::print(0, "position x: %lf", sensor_fetch.gps_front_data.gps_pos.x);
@@ -130,7 +151,9 @@ void sensor_task_fn(void* param)
         // pros::lcd::print(4, "gyro_y: %lf", sensor_fetch.gps_front_data.gps_gyro.y);
         // pros::lcd::print(5, "acc_x: %lf", sensor_fetch.gps_front_data.gps_acc.x);
         // pros::lcd::print(6, "acc_y: %lf", sensor_fetch.gps_front_data.gps_acc.y);
-
+        printf("imu gyro_z: %lf\t, imu acc_x: %lf\t, imu acc_y: %lf\n", 
+        sensor_fetch.imu_data.imu_gyro.z,sensor_fetch.imu_data.imu_acc.x+0.07,sensor_fetch.imu_data.imu_acc.y+0.04);
+        
         pros::Task::delay_until(&now, SENSOR_CONTROL_TIME_MS);
     }
 }
